@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<teachers>
+  <teacher>
+    <TeacherName>Евгений</TeacherName>
+    <TeacherLastName>Герцен</TeacherLastName>
+    <TeacherGuid>9b4b3e62-bdd7-4c8f-b27d-0d5ff2d02fd3</TeacherGuid>
+    <TeacherMail>egor201240@gmail.com</TeacherMail>
+  </teacher>
+</teachers>
