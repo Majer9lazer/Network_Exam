@@ -59,8 +59,6 @@ namespace UI_For_NetworkProg
                 PercentsTextBlock.Dispatcher.InvokeAsync(() => { PercentsTextBlock.Text = Math.Round((i1 / maxProgressBarRand) * 100, 2) + "%"; });
 
             }
-
-
         }
 
         private void DropFileTextBlock_OnDrop(object sender, DragEventArgs e)
