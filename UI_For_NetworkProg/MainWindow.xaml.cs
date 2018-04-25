@@ -7,6 +7,7 @@ using System.Net.Mail;
 using System.Security;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using Microsoft.Win32;
 using UI_For_NetworkProg.UserData.TeacherInfo;
 
@@ -19,6 +20,7 @@ namespace UI_For_NetworkProg
     {
         private readonly BackgroundWorker _progressBarWorker = new BackgroundWorker();
         private readonly BackgroundWorker _sendMailAsync = new BackgroundWorker();
+        private readonly BackgroundWorker _getTeachersByTeacherName = new BackgroundWorker();
         private readonly Random _rnd = new Random();
         private List<Thread> _threads;
         public MainWindow()
@@ -32,6 +34,10 @@ namespace UI_For_NetworkProg
                 new Thread(()=>{_sendMailAsync.RunWorkerAsync();})
                 {
                     Name = "_senMailThread",Priority= (ThreadPriority)_rnd.Next(0,5)
+                },
+                new Thread(()=>{_getTeachersByTeacherName.RunWorkerAsync();})
+                {
+                    Name = "_getTeachersByTeacherName",Priority= (ThreadPriority)_rnd.Next(0,5)
                 }
 
             };
@@ -39,13 +45,26 @@ namespace UI_For_NetworkProg
             //Initialize progress bar work
             _progressBarWorker.DoWork += _progressBarWorker_DoWork;
             _threads.FirstOrDefault(f => f.Name == "_progressBarThread")?.Start();
-            //Initialize senmail worker
+            //Initialize sendmail worker
             _sendMailAsync.DoWork += _sendMailAsync_DoWork;
-           
 
+            //Initialize GetTeacherWorker
+            _getTeachersByTeacherName.DoWork += _getTeachersByTeacherName_DoWork;
+            _getTeachersByTeacherName.WorkerSupportsCancellation = true;
+
+            _threads.FirstOrDefault(f => f.Name == "_getTeachersByTeacherName")?.Start();
         }
 
+        private void _getTeachersByTeacherName_DoWork(object sender, DoWorkEventArgs e)
+        {
 
+            AvaliableTeachersListView.Dispatcher.InvokeAsync(() =>
+            {
+                AvaliableTeachersListView.ItemsSource = Teacher.GeTeachersByName(TeacherNameTextBox.Text);
+            });
+            Thread.Sleep(20);
+
+        }
 
         private void _progressBarWorker_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -104,7 +123,7 @@ namespace UI_For_NetworkProg
             client.Credentials = new NetworkCredential(login, password);
             string from = login;
             client.EnableSsl = true;
-            
+
             ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() =>
             {
 
@@ -116,24 +135,39 @@ namespace UI_For_NetworkProg
                 try
                 {
                     client.SendMailAsync(message);
-                    
                 }
                 catch (Exception ex)
                 {
                     ErrorOrSuccessTextBlock.Text += ex;
                 }
             });
-          
+
             Thread.Sleep(100);
 
         }
-
         private void Client_SendCompleted(object sender, AsyncCompletedEventArgs e)
         {
             ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() =>
             {
                 ErrorOrSuccessTextBlock.Text += "\nMessage was send successfully";
             });
+        }
+
+        private void TeacherNameTextBox_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            if (!_getTeachersByTeacherName.IsBusy)
+            {
+                _getTeachersByTeacherName.RunWorkerAsync();
+            }
+        }
+
+        private void DropTaskFileLabel_OnDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] path = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+                DropTaskFileLabel.Content = path?[0];
+            }
         }
     }
 }

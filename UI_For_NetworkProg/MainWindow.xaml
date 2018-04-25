@@ -34,14 +34,14 @@
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0" Grid.Column="0">
                                 <Label Content="Write your name here" Background="#FF9DD0FD" VerticalContentAlignment="Center" VerticalAlignment="Top"></Label>
-                                <TextBox x:Name="TeacherNameTextBox" BorderBrush="Black" Margin="0,1,0,0" VerticalContentAlignment="Center" VerticalAlignment="Top" Text="Евгений"></TextBox>
+                                <TextBox x:Name="TeacherNameTextBox" BorderBrush="Black" Margin="0,1,0,0" VerticalContentAlignment="Center" VerticalAlignment="Top" KeyUp="TeacherNameTextBox_OnKeyUp"></TextBox>
                             </StackPanel>
                             <ListView Grid.Row="0" Grid.Column="1" x:Name="AvaliableTeachersListView" Grid.RowSpan="2" BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,0,0,0">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
-                                            <GridViewColumn Header="TeacherName"></GridViewColumn>
-                                            <GridViewColumn Header="TeacherLastName"></GridViewColumn>
+                                            <GridViewColumn Header="TeacherName" DisplayMemberBinding="{Binding Path=TeacherName}"></GridViewColumn>
+                                            <GridViewColumn Header="TeacherLastName"  DisplayMemberBinding="{Binding Path=TeacherLastName}"></GridViewColumn>
                                         </GridView.Columns>
                                     </GridView>
                                 </ListView.View>
@@ -54,7 +54,7 @@
                                 <Label Content="Write here name of group to give task" VerticalContentAlignment="Center" VerticalAlignment="Top" Background="#FF9DD0FD"></Label>
                                 <TextBox x:Name="TeacherGroupNameTextBox" BorderBrush="Black" Margin="0,1,0,0" Text="{Binding ElementName=GroupListView,Path=SelectedItem}" VerticalContentAlignment="Center" VerticalAlignment="Top"></TextBox>
                             </StackPanel>
-                            <ListView Grid.Row="2" Grid.Column="1" x:Name="GroupListView"  BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,5,0,0">
+                            <ListView Grid.Row="2" Height="90" Grid.Column="1" x:Name="GroupListView"  BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,5,0,0">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
@@ -88,7 +88,26 @@
                     </ScrollViewer>
                 </Grid>
             </TabItem>
-            <TabItem Header="Student"></TabItem>
+            <TabItem Header="Student">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0">
+                        <Label Content="Write here your Group" HorizontalContentAlignment="Center" BorderBrush="DarkGray" BorderThickness="0.5"></Label>
+                        <TextBox x:Name="StudentGroupName" Margin="0,1,0,0" TextAlignment="Center"></TextBox>
+                        <Button Content="Download File" HorizontalAlignment="Right" Margin="0,1,0,0"></Button>
+                        <Label x:Name="DropTaskFileLabel" AllowDrop="True" Content="Drop here the file" VerticalContentAlignment="Center" Drop="DropTaskFileLabel_OnDrop" Margin="0,1,0,0" Background="#FF21BAEE"></Label>
+                        <Label Content="Write here your name to upload and identify you" HorizontalContentAlignment="Center"></Label>
+                        <TextBox x:Name="StudentNameTextBox" Margin="0,1,0,0" TextAlignment="Center"></TextBox>
+                        <Button Content="Upload solved task" HorizontalAlignment="Right" Margin="0,1,0,0"></Button>
+                    </StackPanel>
+                    <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Visible">
+                        <TextBlock TextWrapping="Wrap" x:Name="StudentErrorOrSuccessTextBlock" Background="#FFDCDFE2" Text="Here will be information progress maybe"></TextBlock>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
         </TabControl>
         <StackPanel Grid.Row="1" Orientation="Vertical" Margin="3,0,0,3">
             <Grid>
@@ -97,7 +116,7 @@
                     <ColumnDefinition Width="40"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <ProgressBar x:Name="ResOfWorkingProgressBar" Grid.Column="0" Background="White" BorderBrush="White" Foreground="#FF37A4E9" ></ProgressBar>
-                <TextBlock Grid.Column="1" x:Name="PercentsTextBlock"  TextAlignment="Center" Background="#FF37A4E9" Foreground="White"></TextBlock>
+                <TextBlock Grid.Column="1" x:Name="PercentsTextBlock"  TextAlignment="Center" Background="#FF37A4E9" Foreground="White" Margin="0,0,3,0"></TextBlock>
             </Grid>
         </StackPanel>
     </Grid>

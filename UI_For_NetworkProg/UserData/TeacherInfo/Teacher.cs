@@ -25,10 +25,9 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
 
         public static Teacher GetTeacherByName(string teacherName)
         {
+            Teacher teacherToReturn = new Teacher();
             var teacher = TeacherDb.Root?.Elements().Elements()
                 .FirstOrDefault(f => f.Name == nameof(TeacherName) && f.Value == teacherName)?.Parent;
-
-            Teacher teacherToReturn = new Teacher();
             foreach (XElement e in teacher.Elements())
             {
                 switch (e.Name.LocalName)
@@ -43,5 +42,64 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
             return teacherToReturn;
         }
 
+        public static List<Teacher> GeTeachersByName(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+            {
+                var teachers = TeacherDb.Root?.Elements().Elements()
+                    .Where(w => w.Name == nameof(TeacherName) && w.Value.Contains(name));
+                
+                List<Teacher> teachersList = new List<Teacher>();
+                foreach (XElement elem in teachers)
+                {
+                    Teacher t = new Teacher();
+                    foreach (XElement xelem in elem.Parent.Elements())
+                    {
+                        switch (xelem.Name.LocalName)
+                        {
+                            case "TeacherName":
+                            {
+                                t.TeacherName = xelem.Value;
+                                break;
+                            }
+                            case "TeacherLastName":
+                            {
+                                t.TeacherLastName = xelem.Value;
+                                break;
+                            }
+                        }
+                    }
+                    teachersList.Add(t);
+                }
+                return teachersList;
+            }
+            else
+            {
+                var teachers = TeacherDb.Root?.Elements();
+                List<Teacher> teachersList = new List<Teacher>();
+                foreach (XElement elem in teachers)
+                {
+                    Teacher t = new Teacher();
+                    foreach (XElement el in elem.Elements())
+                    {
+                        switch (el.Name.LocalName)
+                        {
+                            case "TeacherName":
+                            {
+                                t.TeacherName = el.Value;
+                                break;
+                            }
+                            case "TeacherLastName":
+                            {
+                                t.TeacherLastName = el.Value;
+                                break;
+                            }
+                        }
+                    }
+                    teachersList.Add(t);
+                }
+                return teachersList;
+            }
+        }
     }
 }
