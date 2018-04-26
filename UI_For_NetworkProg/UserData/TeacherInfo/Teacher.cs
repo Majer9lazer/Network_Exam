@@ -41,7 +41,6 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
 
             return teacherToReturn;
         }
-
         public static List<Teacher> GeTeachersByName(string name)
         {
             if (!string.IsNullOrEmpty(name))

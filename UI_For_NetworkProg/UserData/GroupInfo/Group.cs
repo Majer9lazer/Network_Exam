@@ -12,13 +12,19 @@ using UI_For_NetworkProg.UserData.StudentInfo;
 
 namespace UI_For_NetworkProg.UserData.GroupInfo
 {
+
     [Serializable]
     public class Group
     {
+        private enum GroupNames
+        {
+            SDP, SEP, PMP, PUB, SMB
+        }
+
         private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent;
         private static readonly FileInfo F1 = new FileInfo(PathToDataBase.FullName + @"/UserData/GroupInfo/Group_Db.xml");
-        private readonly XDocument _groupDb = XDocument.Load(F1.FullName);
-
+        private static readonly XDocument _groupDb = XDocument.Load(F1.FullName);
+        private readonly Random _rnd = new Random();
 
         public string GroupName { get; set; }
         public int? CountOfPupils { get; set; }
@@ -32,7 +38,7 @@ namespace UI_For_NetworkProg.UserData.GroupInfo
                 _groupDb.Save(F1.FullName);
                 _groupDb.Root?.Elements().Elements().FirstOrDefault(w => w.Value == GroupName)?.Parent?.Add(new XElement("students"));
                 _groupDb.Save(F1.FullName);
-                XElement studentElement = _groupDb.Root?.Elements().Elements().FirstOrDefault(f => f.Name == "students");
+                XElement studentElement = _groupDb.Root?.Elements().Elements().FirstOrDefault(f => f.Value == GroupName)?.Parent?.Element("students");
 
                 foreach (Student s in Students)
                     studentElement?.Add(new XElement(nameof(s.StudentName), s.StudentName));
@@ -67,7 +73,7 @@ namespace UI_For_NetworkProg.UserData.GroupInfo
             }
             return true;
         }
-        public bool IsGroupIsExists(string groupName)
+        private bool IsGroupIsExists(string groupName)
         {
             XElement group = _groupDb.Root?.Elements().Elements().FirstOrDefault(f => f.Name == nameof(GroupName) && f.Value == GroupName);
             if (group == null)
@@ -75,5 +81,102 @@ namespace UI_For_NetworkProg.UserData.GroupInfo
             return true;
         }
 
+        private List<string> GetPossibleCountOfGroups()
+        {
+            int currentYear = (DateTime.Now.Year - 1) % 100;
+            List<string> groupsList = new List<string>();
+
+            for (int l = 0; l <= (int)GroupNames.SMB; l++)
+            {
+                for (int k = 0; k < 3; k++)
+                {
+                    for (int i = 0; i < currentYear; i++)
+                    {
+                        int groupNum = _rnd.Next(1, currentYear);
+                        string groupName = ((GroupNames)_rnd.Next(0, (int)GroupNames.SMB)).ToString();
+                        if (groupNum >= 10)
+                        {
+                            groupsList.Add(groupName + $"-{groupNum}{_rnd.Next(1, 4)}");
+                        }
+                        else
+                        {
+                            groupsList.Add(groupName + $"-0{groupNum}{_rnd.Next(1, 4)}");
+                        }
+                    }
+                }
+            }
+            return groupsList;
+        }
+
+        private void GenerateData()
+        {
+            List<Student> students = new List<Student>();
+            foreach (dynamic d in Student.GetStudents())
+            {
+                Student st = new Student();
+                st.StudentName = d.student.StudentName;
+                students.Add(st);
+            }
+
+            foreach (string @group in GetPossibleCountOfGroups())
+            {
+                Group g = new Group
+                {
+                    GroupName = @group
+                };
+                int randStudentCountIngroup = _rnd.Next(5, 16);
+                for (int i = 0; i < randStudentCountIngroup; i++)
+                {
+                    g.Students.Add(students.ElementAt(_rnd.Next(0, students.Count)));
+                }
+                g.AddGroupWithSudents();
+            }
+        }
+
+        public static List<Group> GetCurrentGroupByName(string groupName)
+        {
+            if (!string.IsNullOrEmpty(groupName))
+            {
+              var groupNames= _groupDb.Root?.Elements().Elements()
+                    .Where(f => f.Name == nameof(GroupName) && f.Value.Contains(groupName)).Select(s => s.Value).ToList();
+
+                List<Group> groupList= new List<Group>();
+                if (groupNames != null)
+                    foreach (string s in groupNames)
+                        groupList.Add(new Group() {GroupName = s});
+
+                return groupList;
+            }
+            return null;
+        }
+
+        public static List<Student> GetListOfStudentsByGroupName(string groupName,string studentName)
+        {
+            if (!string.IsNullOrEmpty(groupName)&&!string.IsNullOrEmpty(studentName))
+            {
+                var students = _groupDb.Root?.Elements().Elements()
+                    .Where(w => w.Name == nameof(GroupName) && w.Value.Contains(groupName)).Select(s => new
+                    {
+                        students = s.Parent?.Element("students")?.Elements().Where(w => w.Value.Contains(studentName))
+                            .Select(s1 => new
+                            {
+                                StudentName = s1.Value
+                            })
+                            .ToList()
+                    }).ToList();
+
+                List<Student> studentList= new List<Student>();
+                if (students != null)
+                    foreach (var student in students)
+                    foreach (var student1 in student.students)
+                    {
+                        Student st = new Student(student1.StudentName);
+                        studentList.Add(st);
+                    }
+
+                return studentList;
+            }
+            return null;
+        }
     }
 }

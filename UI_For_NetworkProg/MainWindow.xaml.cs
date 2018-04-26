@@ -7,8 +7,10 @@ using System.Net.Mail;
 using System.Security;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
+using UI_For_NetworkProg.UserData.StudentInfo;
 using UI_For_NetworkProg.UserData.TeacherInfo;
 
 namespace UI_For_NetworkProg
@@ -25,6 +27,7 @@ namespace UI_For_NetworkProg
         private List<Thread> _threads;
         public MainWindow()
         {
+          
             _threads = new List<Thread>()
             {
                 new Thread(()=>{_progressBarWorker.RunWorkerAsync();})
@@ -53,6 +56,7 @@ namespace UI_For_NetworkProg
             _getTeachersByTeacherName.WorkerSupportsCancellation = true;
 
             _threads.FirstOrDefault(f => f.Name == "_getTeachersByTeacherName")?.Start();
+            
         }
 
         private void _getTeachersByTeacherName_DoWork(object sender, DoWorkEventArgs e)

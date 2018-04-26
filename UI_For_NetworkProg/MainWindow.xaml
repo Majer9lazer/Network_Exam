@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI_For_NetworkProg"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Icon="Images/Icon_Image/Icon.jpg">
+        Title="MainWindow" Height="576.584" Width="723.493" Icon="Images/Icon_Image/Icon.jpg">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -30,7 +30,7 @@
                                 <RowDefinition></RowDefinition>
                                 <RowDefinition></RowDefinition>
                                 <RowDefinition></RowDefinition>
-                                <RowDefinition></RowDefinition>
+                                <RowDefinition Height="160"></RowDefinition>
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0" Grid.Column="0">
                                 <Label Content="Write your name here" Background="#FF9DD0FD" VerticalContentAlignment="Center" VerticalAlignment="Top"></Label>
@@ -81,6 +81,15 @@
                                 <Button  Content="Resend me Guid on my mail"  VerticalAlignment="Top" x:Name="ResendButton" Margin="3,5,0,0" Click="ResendButton_OnClick"></Button>
                                 <Button Content="Send File to students"  VerticalAlignment="Bottom" Margin="3,8,0,0"  Click="SendFileToSolve"></Button>
                             </StackPanel>
+                            <ListView Grid.Row="5" Grid.Column="1" x:Name="StudentsListView">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridView.Columns>
+                                            <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=student.StudentName}"></GridViewColumn>
+                                        </GridView.Columns>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
                         </Grid>
                     </StackPanel>
                     <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="40">
