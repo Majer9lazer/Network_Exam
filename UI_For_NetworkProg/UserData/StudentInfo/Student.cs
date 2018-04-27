@@ -10,7 +10,7 @@ namespace UI_For_NetworkProg.UserData.StudentInfo
     public class Student
     {
         //Static read only peremennye
-        private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent;
+        private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent?.Parent;
         private static readonly FileInfo UserDataBaseFileInfo = new FileInfo(PathToDataBase.FullName + @"/UserData/StudentInfo/Students_Db.xml");
         public static readonly XDocument StudentDb = XDocument.Load(UserDataBaseFileInfo.FullName);
 

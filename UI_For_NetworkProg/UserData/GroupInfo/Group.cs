@@ -22,7 +22,7 @@ namespace UI_For_NetworkProg.UserData.GroupInfo
             SDP, SEP, PMP, PUB, SMB
         }
 
-        private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent;
+        private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent?.Parent;
         private static readonly FileInfo F1 = new FileInfo(PathToDataBase.FullName + @"/UserData/GroupInfo/Group_Db.xml");
         private static readonly XDocument _groupDb = XDocument.Load(F1.FullName);
         private readonly Random _rnd = new Random();

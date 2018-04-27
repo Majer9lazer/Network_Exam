@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
+using UI_For_NetworkProg.UserData.GroupInfo;
 using UI_For_NetworkProg.UserData.StudentInfo;
 using UI_For_NetworkProg.UserData.TeacherInfo;
 
@@ -27,6 +28,8 @@ namespace UI_For_NetworkProg
         private List<Thread> _threads;
         public MainWindow()
         {
+            Group g = new Group();
+            g.GroupName = "Hello";
           
             _threads = new List<Thread>()
             {
@@ -172,6 +175,11 @@ namespace UI_For_NetworkProg
                 string[] path = (string[])e.Data.GetData(DataFormats.FileDrop, true);
                 DropTaskFileLabel.Content = path?[0];
             }
+        }
+
+        private void ThemeNameTextBox_OnKeyUp(object sender, KeyEventArgs e)
+        {
+            
         }
     }
 }

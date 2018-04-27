@@ -35,18 +35,27 @@ namespace ChatFor_StudentsAndTeachers
 
         private void _getStudentByGroupNameWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            StudentsInCurrentGroup.Dispatcher.InvokeAsync(() =>
+            try
             {
-                StudentsInCurrentGroup.ItemsSource = Group.GetListOfStudentsByGroupName(((Group)GroupInfoListView.SelectedItem).GroupName,StudenNameTextBox.Text);
-            });
+                StudentsInCurrentGroup.Dispatcher.InvokeAsync(() =>
+                {
+                    StudentsInCurrentGroup.ItemsSource = Group.GetListOfStudentsByGroupName(((Group)GroupInfoListView.SelectedItem).GroupName, StudenNameTextBox.Text);
+                });
+            }
+            catch (Exception ex)
+            {
+                ErrorOrSuccesTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccesTextBlock.Text += ex; });
+            }
+
         }
 
         private void _getGroupsByNameWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            GroupInfoListView.Dispatcher.InvokeAsync(() =>
+            try
             {
-                GroupInfoListView.ItemsSource = Group.GetCurrentGroupByName(GroupNameTextBox.Text);
-            });
+                GroupInfoListView.Dispatcher.InvokeAsync(() => { GroupInfoListView.ItemsSource = Group.GetCurrentGroupByName(GroupNameTextBox.Text); });
+            }
+            catch (Exception ex) { ErrorOrSuccesTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccesTextBlock.Text += ex; }); }
         }
 
         private void GroupNameTextBox_OnKeyUp(object sender, KeyEventArgs e)

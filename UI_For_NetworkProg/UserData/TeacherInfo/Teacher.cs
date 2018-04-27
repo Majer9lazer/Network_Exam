@@ -13,7 +13,7 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
     [Serializable]
     public class Teacher
     {
-        private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent;
+        private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent?.Parent;
         private static readonly FileInfo F1 = new FileInfo(PathToDataBase.FullName + @"/UserData/TeacherInfo/Teachers_Db.xml");
         public static readonly XDocument TeacherDb = XDocument.Load(F1.FullName);
 

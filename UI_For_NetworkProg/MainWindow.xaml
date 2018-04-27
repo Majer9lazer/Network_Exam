@@ -75,7 +75,7 @@
                             </StackPanel>
                             <StackPanel Grid.Row="4" Grid.Column="0">
                                 <Label Margin="0,5,0,0" Content="Write here theme" Background="#FF7EC0FB"></Label>
-                                <TextBox x:Name="ThemeNameTextBox" Margin="0,3,0,0" BorderBrush="Black"></TextBox>
+                                <TextBox x:Name="ThemeNameTextBox" Margin="0,3,0,0" BorderBrush="Black" KeyUp="ThemeNameTextBox_OnKeyUp"></TextBox>
                             </StackPanel>
                             <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical">
                                 <Button  Content="Resend me Guid on my mail"  VerticalAlignment="Top" x:Name="ResendButton" Margin="3,5,0,0" Click="ResendButton_OnClick"></Button>

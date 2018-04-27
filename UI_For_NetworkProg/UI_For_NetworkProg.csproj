@@ -99,14 +99,5 @@
   <ItemGroup>
     <Resource Include="Images\Icon_Image\Icon.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="UserData\StudentInfo\Students_Db.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="UserData\TeacherInfo\Teachers_Db.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="UserData\GroupInfo\Group_Db.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
