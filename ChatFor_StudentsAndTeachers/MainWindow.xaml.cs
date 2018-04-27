@@ -24,19 +24,20 @@ namespace ChatFor_StudentsAndTeachers
     public partial class MainWindow : Window
     {
         private readonly BackgroundWorker _getGroupsByNameWorker = new BackgroundWorker();
-        private  readonly BackgroundWorker _getStudentByGroupNameWorker= new BackgroundWorker();
+        private readonly BackgroundWorker _getStudentByGroupNameWorker = new BackgroundWorker();
         public MainWindow()
         {
             InitializeComponent();
             _getGroupsByNameWorker.DoWork += _getGroupsByNameWorker_DoWork;
             _getStudentByGroupNameWorker.DoWork += _getStudentByGroupNameWorker_DoWork;
+
         }
 
         private void _getStudentByGroupNameWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             StudentsInCurrentGroup.Dispatcher.InvokeAsync(() =>
-            {   
-                StudentsInCurrentGroup.ItemsSource = Group.GetListOfStudentsByGroupName(((Group)GroupInfoListView.SelectedItem).GroupName, StudenNameTextBox.Text);
+            {
+                StudentsInCurrentGroup.ItemsSource = Group.GetListOfStudentsByGroupName(((Group)GroupInfoListView.SelectedItem).GroupName,StudenNameTextBox.Text);
             });
         }
 
@@ -62,7 +63,6 @@ namespace ChatFor_StudentsAndTeachers
         //private void GroupInfoListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         //{
         //    var selectedItem =(Group) GroupInfoListView.SelectedItem;
-            
         //    var ss = selectedItem.ToString();
         //}
     }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UI_For_NetworkProg.UserData.StudentInfo;
@@ -136,46 +137,28 @@ namespace UI_For_NetworkProg.UserData.GroupInfo
         public static List<Group> GetCurrentGroupByName(string groupName)
         {
             if (!string.IsNullOrEmpty(groupName))
-            {
-              var groupNames= _groupDb.Root?.Elements().Elements()
-                    .Where(f => f.Name == nameof(GroupName) && f.Value.Contains(groupName)).Select(s => s.Value).ToList();
+                return _groupDb.Root?.Elements().Elements()
+                        .Where(f => f.Name == nameof(GroupName) && f.Value.Contains(groupName)).Select(s => new Group()
+                        {
+                            GroupName = s.Value
+                        }).ToList();
 
-                List<Group> groupList= new List<Group>();
-                if (groupNames != null)
-                    foreach (string s in groupNames)
-                        groupList.Add(new Group() {GroupName = s});
-
-                return groupList;
-            }
             return null;
         }
 
-        public static List<Student> GetListOfStudentsByGroupName(string groupName,string studentName)
+        public static List<Student> GetListOfStudentsByGroupName(string groupName, string studentName)
         {
-            if (!string.IsNullOrEmpty(groupName)&&!string.IsNullOrEmpty(studentName))
-            {
-                var students = _groupDb.Root?.Elements().Elements()
-                    .Where(w => w.Name == nameof(GroupName) && w.Value.Contains(groupName)).Select(s => new
+            if (!string.IsNullOrEmpty(groupName) && !string.IsNullOrEmpty(studentName))
+                return _groupDb.Root?.Elements().Elements()
+                    .Where(w => w.Name == nameof(GroupName) && w.Value.Contains(groupName))
+                    .Select(s => new Group
                     {
-                        students = s.Parent?.Element("students")?.Elements().Where(w => w.Value.Contains(studentName))
-                            .Select(s1 => new
-                            {
-                                StudentName = s1.Value
-                            })
+                        Students = s.Parent?.Element("students")?.Elements()
+                            .Where(w => w.Value.Contains(studentName))
+                            .Select(s1 => new Student { StudentName = s1.Value })
                             .ToList()
-                    }).ToList();
-
-                List<Student> studentList= new List<Student>();
-                if (students != null)
-                    foreach (var student in students)
-                    foreach (var student1 in student.students)
-                    {
-                        Student st = new Student(student1.StudentName);
-                        studentList.Add(st);
-                    }
-
-                return studentList;
-            }
+                    }).Select(s => s.Students).ToList()[0].ToList();
+                
             return null;
         }
     }
