@@ -1,0 +1,14 @@
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\bin\Debug\UI_For_NetworkProg.exe.config
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\bin\Debug\UI_For_NetworkProg.exe
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\bin\Debug\UI_For_NetworkProg.pdb
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\MainWindow.g.cs
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\App.g.cs
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg_MarkupCompile.cache
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg_MarkupCompile.lref
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\MainWindow.baml
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg.g.resources
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg.Properties.Resources.resources
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg.csproj.GenerateResource.Cache
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg.exe
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg.pdb
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\UI_For_NetworkProg\obj\Debug\UI_For_NetworkProg.csprojResolveAssemblyReference.cache

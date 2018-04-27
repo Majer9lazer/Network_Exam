@@ -1,0 +1,17 @@
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\ChatFor_StudentsAndTeachers.exe.config
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\ChatFor_StudentsAndTeachers.exe
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\ChatFor_StudentsAndTeachers.pdb
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\UI_For_NetworkProg.exe
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\UI_For_NetworkProg.pdb
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\UI_For_NetworkProg.exe.config
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers.csprojResolveAssemblyReference.cache
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\MainWindow.g.cs
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\App.g.cs
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers_MarkupCompile.cache
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers_MarkupCompile.lref
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\MainWindow.baml
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers.g.resources
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers.Properties.Resources.resources
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers.csproj.GenerateResource.Cache
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers.exe
+C:\Users\СидоренкоЕ\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\obj\Debug\ChatFor_StudentsAndTeachers.pdb
