@@ -9,8 +9,10 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using UI_For_NetworkProg.UserData.GroupInfo;
+using UI_For_NetworkProg.UserData.ServerUserData;
 using UI_For_NetworkProg.UserData.StudentInfo;
 using UI_For_NetworkProg.UserData.TeacherInfo;
 
@@ -24,13 +26,16 @@ namespace UI_For_NetworkProg
         private readonly BackgroundWorker _progressBarWorker = new BackgroundWorker();
         private readonly BackgroundWorker _sendMailAsync = new BackgroundWorker();
         private readonly BackgroundWorker _getTeachersByTeacherName = new BackgroundWorker();
+        private readonly BackgroundWorker _getBigDataFromServer = new BackgroundWorker();
         private readonly Random _rnd = new Random();
+        private readonly ServerData _server = new ServerData();
+     
         private List<Thread> _threads;
         public MainWindow()
         {
-            Group g = new Group();
-            g.GroupName = "Hello";
-          
+            //GetBigData from server
+            _server.GetSms("StudentAdded");
+
             _threads = new List<Thread>()
             {
                 new Thread(()=>{_progressBarWorker.RunWorkerAsync();})
@@ -50,6 +55,8 @@ namespace UI_For_NetworkProg
             InitializeComponent();
             //Initialize progress bar work
             _progressBarWorker.DoWork += _progressBarWorker_DoWork;
+            _progressBarWorker.WorkerSupportsCancellation = true;
+            _progressBarWorker.RunWorkerCompleted += _progressBarWorker_RunWorkerCompleted;
             _threads.FirstOrDefault(f => f.Name == "_progressBarThread")?.Start();
             //Initialize sendmail worker
             _sendMailAsync.DoWork += _sendMailAsync_DoWork;
@@ -58,32 +65,61 @@ namespace UI_For_NetworkProg
             _getTeachersByTeacherName.DoWork += _getTeachersByTeacherName_DoWork;
             _getTeachersByTeacherName.WorkerSupportsCancellation = true;
 
-            _threads.FirstOrDefault(f => f.Name == "_getTeachersByTeacherName")?.Start();
-            
+            //initialize big data worker getter
+            _getBigDataFromServer.DoWork += _getBigDataFromServer_DoWork;
+            _getBigDataFromServer.WorkerSupportsCancellation = true;
+            _getBigDataFromServer.RunWorkerCompleted += _getBigDataFromServer_RunWorkerCompleted;
+            _getBigDataFromServer.RunWorkerAsync();
+
         }
 
+        private void _progressBarWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ResOfWorkingProgressBar.Dispatcher.InvokeAsync(() => { ResOfWorkingProgressBar.Value = 3000; });
+            PercentsTextBlock.Dispatcher.InvokeAsync(() => { PercentsTextBlock.Text = 100 + "%"; });
+        }
+
+        private void _getBigDataFromServer_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            _threads.FirstOrDefault(f => f.Name == "_getTeachersByTeacherName")?.Start();
+            _progressBarWorker.CancelAsync();
+
+        }
+
+        private void _getBigDataFromServer_DoWork(object sender, DoWorkEventArgs e)
+        {
+            _server.GetAllDataFromServer();
+        }
         private void _getTeachersByTeacherName_DoWork(object sender, DoWorkEventArgs e)
         {
 
             AvaliableTeachersListView.Dispatcher.InvokeAsync(() =>
-            {
-                AvaliableTeachersListView.ItemsSource = Teacher.GeTeachersByName(TeacherNameTextBox.Text);
-            });
+                {
+                    AvaliableTeachersListView.ItemsSource = _server.GeTeachersByName(TeacherNameTextBox.Text);
+                });
             Thread.Sleep(20);
 
         }
 
         private void _progressBarWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            int maxProgressBarRand = _rnd.Next(100, 1000);
+            int maxProgressBarRand = 3000;
             ResOfWorkingProgressBar.Dispatcher.InvokeAsync(() => { ResOfWorkingProgressBar.Maximum = maxProgressBarRand; });
             for (int i = 1; i <= maxProgressBarRand; i++)
             {
-                double i1 = i;
-                ResOfWorkingProgressBar.Dispatcher.InvokeAsync(() => { ResOfWorkingProgressBar.Value = i1; });
-                Thread.Sleep(_rnd.Next(5, 20));
-                PercentsTextBlock.Dispatcher.InvokeAsync(() => { PercentsTextBlock.Text = Math.Round((i1 / maxProgressBarRand) * 100, 2) + "%"; });
-
+                switch (_progressBarWorker.CancellationPending)
+                {
+                    case true:
+                        e.Cancel = true;
+                        maxProgressBarRand = 0;
+                        break;
+                    case false:
+                        double i1 = i;
+                        ResOfWorkingProgressBar.Dispatcher.InvokeAsync(() => { ResOfWorkingProgressBar.Value = i1; });
+                        Thread.Sleep(_rnd.Next(5, 20));
+                        PercentsTextBlock.Dispatcher.InvokeAsync(() => { PercentsTextBlock.Text = Math.Round((i1 / maxProgressBarRand) * 100, 2) + "%"; });
+                        break;
+                }
             }
         }
 
@@ -99,10 +135,12 @@ namespace UI_For_NetworkProg
         private void ShowDialogButtonClick(object sender, RoutedEventArgs e)
         {
 
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.Filter = "Файлы типа(*.cs)|*.cs" + "|Все файлы (*.*)|*.*";
-            fileDialog.Multiselect = false;
-            fileDialog.CheckFileExists = true;
+            OpenFileDialog fileDialog = new OpenFileDialog
+            {
+                Filter = "Файлы типа(*.cs)|*.cs" + "|Все файлы (*.*)|*.*",
+                Multiselect = false,
+                CheckFileExists = true
+            };
             if (fileDialog.ShowDialog() == true)
             {
                 DropFileLabel.Content = fileDialog.FileName;
@@ -126,17 +164,17 @@ namespace UI_For_NetworkProg
             string password = "sdp123456789";
 
 
-            SmtpClient client = new SmtpClient(smtpHost, smtpPort);
-            client.Credentials = new NetworkCredential(login, password);
+            SmtpClient client =
+                new SmtpClient(smtpHost, smtpPort) { Credentials = new NetworkCredential(login, password) };
             string from = login;
             client.EnableSsl = true;
 
             ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() =>
             {
 
-                string to = Teacher.GetTeacherByName(TeacherNameTextBox.Text).TeacherMail;
+                string to = _server.GetTeacherByName(TeacherNameTextBox.Text).TeacherMail;
                 string subj = "Восстановка мэйла";
-                string body = $"Ваш Guid = {Teacher.GetTeacherByName(TeacherNameTextBox.Text).TeacherGuid}";
+                string body = $"Ваш Guid = {_server.GetTeacherByName(TeacherNameTextBox.Text).TeacherGuid}";
                 MailMessage message = new MailMessage(from, to, subj, body);
                 client.SendCompleted += Client_SendCompleted;
                 try
@@ -179,7 +217,17 @@ namespace UI_For_NetworkProg
 
         private void ThemeNameTextBox_OnKeyUp(object sender, KeyEventArgs e)
         {
-            
+
+        }
+
+        private void AvaliableTeachersListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            GroupListView.Dispatcher.InvokeAsync(() => { GroupListView.ItemsSource = ((Teacher)AvaliableTeachersListView.SelectedItem).Groups.OrderBy(o => o.GroupName); });
+        }
+
+        private void GroupListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            StudentsListView.ItemsSource = ((Group)GroupListView.SelectedItem).Students.OrderBy(o => o.StudentName);
         }
     }
 }

@@ -36,7 +36,7 @@
                                 <Label Content="Write your name here" Background="#FF9DD0FD" VerticalContentAlignment="Center" VerticalAlignment="Top"></Label>
                                 <TextBox x:Name="TeacherNameTextBox" BorderBrush="Black" Margin="0,1,0,0" VerticalContentAlignment="Center" VerticalAlignment="Top" KeyUp="TeacherNameTextBox_OnKeyUp"></TextBox>
                             </StackPanel>
-                            <ListView Grid.Row="0" Grid.Column="1" x:Name="AvaliableTeachersListView" Grid.RowSpan="2" BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,0,0,0">
+                            <ListView Grid.Row="0" Grid.Column="1" x:Name="AvaliableTeachersListView" Grid.RowSpan="2" BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,0,0,0" SelectionChanged="AvaliableTeachersListView_OnSelectionChanged">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
@@ -52,13 +52,13 @@
                             </StackPanel>
                             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">
                                 <Label Content="Write here name of group to give task" VerticalContentAlignment="Center" VerticalAlignment="Top" Background="#FF9DD0FD"></Label>
-                                <TextBox x:Name="TeacherGroupNameTextBox" BorderBrush="Black" Margin="0,1,0,0" Text="{Binding ElementName=GroupListView,Path=SelectedItem}" VerticalContentAlignment="Center" VerticalAlignment="Top"></TextBox>
+                                <TextBox x:Name="TeacherGroupNameTextBox" BorderBrush="Black" Margin="0,1,0,0" Text="{Binding ElementName=GroupListView,Path=SelectedItem.GroupName}" VerticalContentAlignment="Center" VerticalAlignment="Top"></TextBox>
                             </StackPanel>
-                            <ListView Grid.Row="2" Height="90" Grid.Column="1" x:Name="GroupListView"  BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,5,0,0">
+                            <ListView Grid.Row="2" Height="90" Grid.Column="1" x:Name="GroupListView"  BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,5,0,0" SelectionChanged="GroupListView_OnSelectionChanged">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
-                                            <GridViewColumn Header="GroupName"></GridViewColumn>
+                                            <GridViewColumn Header="GroupName" DisplayMemberBinding="{Binding Path=GroupName}"></GridViewColumn>
                                         </GridView.Columns>
                                     </GridView>
                                 </ListView.View>
@@ -85,7 +85,7 @@
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
-                                            <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=student.StudentName}"></GridViewColumn>
+                                            <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=StudentName}"></GridViewColumn>
                                         </GridView.Columns>
                                     </GridView>
                                 </ListView.View>

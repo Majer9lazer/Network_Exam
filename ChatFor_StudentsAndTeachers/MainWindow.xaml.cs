@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using UI_For_NetworkProg.UserData.GroupInfo;
+using UI_For_NetworkProg.UserData.ServerUserData;
 using UI_For_NetworkProg.UserData.StudentInfo;
 
 namespace ChatFor_StudentsAndTeachers
@@ -28,6 +29,8 @@ namespace ChatFor_StudentsAndTeachers
         public MainWindow()
         {
             InitializeComponent();
+           
+
             _getGroupsByNameWorker.DoWork += _getGroupsByNameWorker_DoWork;
             _getStudentByGroupNameWorker.DoWork += _getStudentByGroupNameWorker_DoWork;
 
@@ -39,21 +42,20 @@ namespace ChatFor_StudentsAndTeachers
             {
                 StudentsInCurrentGroup.Dispatcher.InvokeAsync(() =>
                 {
-                    StudentsInCurrentGroup.ItemsSource = Group.GetListOfStudentsByGroupName(((Group)GroupInfoListView.SelectedItem).GroupName, StudenNameTextBox.Text);
+                    // StudentsInCurrentGroup.ItemsSource = Group.GetListOfStudentsByGroupName(((Group)GroupInfoListView.SelectedItem).GroupName, StudenNameTextBox.Text);
                 });
             }
             catch (Exception ex)
             {
                 ErrorOrSuccesTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccesTextBlock.Text += ex; });
             }
-
         }
 
         private void _getGroupsByNameWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
-                GroupInfoListView.Dispatcher.InvokeAsync(() => { GroupInfoListView.ItemsSource = Group.GetCurrentGroupByName(GroupNameTextBox.Text); });
+                //  GroupInfoListView.Dispatcher.InvokeAsync(() => { GroupInfoListView.ItemsSource = Group.GetCurrentGroupByName(GroupNameTextBox.Text); });
             }
             catch (Exception ex) { ErrorOrSuccesTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccesTextBlock.Text += ex; }); }
         }
@@ -68,11 +70,11 @@ namespace ChatFor_StudentsAndTeachers
             _getStudentByGroupNameWorker.RunWorkerAsync();
         }
 
-
-        //private void GroupInfoListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    var selectedItem =(Group) GroupInfoListView.SelectedItem;
-        //    var ss = selectedItem.ToString();
-        //}
+        private void SendMessage_OnClick(object sender, RoutedEventArgs e)
+        {
+            MessageTextBlock.Text += "\n" + InputMessageTextBox.Text;
+            MessagesScrollViewer.ScrollToEnd();
+            InputMessageTextBox.Text = "";
+        }
     }
 }
