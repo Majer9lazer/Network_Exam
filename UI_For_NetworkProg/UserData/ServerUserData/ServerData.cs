@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RestSharp;
-using RestSharp.Extensions;
 using UI_For_NetworkProg.UserData.GroupInfo;
 using UI_For_NetworkProg.UserData.StudentInfo;
 using UI_For_NetworkProg.UserData.TeacherInfo;
@@ -61,18 +58,45 @@ namespace UI_For_NetworkProg.UserData.ServerUserData
         public void Add_Students(Student st) => Students.Add(st);
         public void Add_Groups(Group g) => Groups.Add(g);
         public void Add_Teachers(Teacher t) => Teachers.Add(t);
+
+        public string UploadFileToServer(FileInfo fileInfo, string groupName, string teacherName)
+        {
+            string s = string.IsNullOrEmpty(fileInfo.FullName)
+                    || string.IsNullOrEmpty(groupName)
+                    || string.IsNullOrEmpty(teacherName)
+                ? throw new ArgumentNullException() :
+                "";
+            if (string.IsNullOrEmpty(s))
+                try
+                {
+                    string response_;
+                    using (WebClient webClient = new WebClient())
+                    {
+                        var responce = webClient.UploadFile(
+                            UrlToServer + $"UploadFile/{fileInfo.Extension}/{groupName}/{teacherName}",
+                            fileInfo.FullName);
+                        response_ = Encoding.ASCII.GetString(responce);
+                    }
+                    return null;
+                }
+                catch (Exception e)
+                {
+                    return e.Message;
+                }
+            return s;
+        }
         public ServerData()
         {
 
         }
 
-        public ServerData(bool InitializeRabbitMq)
+        public ServerData(bool initializeRabbitMq)
         {
             //Using rabbit mq
             string Ip = "localhost";
             string Login = "best";
             string Password = GetPasswordFromRabbitMq();
-            _connection = new ConnectionFactory()
+            _connection = new ConnectionFactory
             {
                 HostName = Ip,
                 UserName = Login,
@@ -84,7 +108,7 @@ namespace UI_For_NetworkProg.UserData.ServerUserData
         public string GetPasswordFromRabbitMq()
         {
             RestRequest request = new RestRequest("GetPasswordFromRabbitMq");
-            IRestResponse response = ServerData.Client.Execute(request);
+            IRestResponse response = Client.Execute(request);
             return response.Content;
 
         }

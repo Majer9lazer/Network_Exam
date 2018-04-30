@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
@@ -27,15 +28,12 @@ namespace UI_For_NetworkProg
         private readonly BackgroundWorker _sendMailAsync = new BackgroundWorker();
         private readonly BackgroundWorker _getTeachersByTeacherName = new BackgroundWorker();
         private readonly BackgroundWorker _getBigDataFromServer = new BackgroundWorker();
+        private readonly BackgroundWorker _checkForConnectionToServerWorker = new BackgroundWorker();
         private readonly Random _rnd = new Random();
-        private readonly ServerData _server = new ServerData();
-     
+        private ServerData _server;
         private List<Thread> _threads;
         public MainWindow()
         {
-            //GetBigData from server
-            _server.GetSms("StudentAdded");
-
             _threads = new List<Thread>()
             {
                 new Thread(()=>{_progressBarWorker.RunWorkerAsync();})
@@ -52,25 +50,49 @@ namespace UI_For_NetworkProg
                 }
 
             };
+
             InitializeComponent();
+
+            //Initialize worker to check connection and other work to server
+            _checkForConnectionToServerWorker.WorkerSupportsCancellation = true;
+            _checkForConnectionToServerWorker.DoWork += _checkForConnectionToServerWorker_DoWork;
+            _checkForConnectionToServerWorker.RunWorkerAsync();
+
             //Initialize progress bar work
             _progressBarWorker.DoWork += _progressBarWorker_DoWork;
             _progressBarWorker.WorkerSupportsCancellation = true;
             _progressBarWorker.RunWorkerCompleted += _progressBarWorker_RunWorkerCompleted;
             _threads.FirstOrDefault(f => f.Name == "_progressBarThread")?.Start();
+
             //Initialize sendmail worker
             _sendMailAsync.DoWork += _sendMailAsync_DoWork;
+        }
 
-            //Initialize GetTeacherWorker
-            _getTeachersByTeacherName.DoWork += _getTeachersByTeacherName_DoWork;
-            _getTeachersByTeacherName.WorkerSupportsCancellation = true;
+        private void _checkForConnectionToServerWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            try
+            {
+                //Connect to server
+                _server = new ServerData(true);
 
-            //initialize big data worker getter
-            _getBigDataFromServer.DoWork += _getBigDataFromServer_DoWork;
-            _getBigDataFromServer.WorkerSupportsCancellation = true;
-            _getBigDataFromServer.RunWorkerCompleted += _getBigDataFromServer_RunWorkerCompleted;
-            _getBigDataFromServer.RunWorkerAsync();
+                //InitializeRabbitMq
+                _server.GetSms("StudentAdded");
 
+                //Initialize GetTeacherWorker
+                _getTeachersByTeacherName.DoWork += _getTeachersByTeacherName_DoWork;
+                _getTeachersByTeacherName.WorkerSupportsCancellation = true;
+
+                //initialize big data worker getter
+                _getBigDataFromServer.DoWork += _getBigDataFromServer_DoWork;
+                _getBigDataFromServer.WorkerSupportsCancellation = true;
+                _getBigDataFromServer.RunWorkerCompleted += _getBigDataFromServer_RunWorkerCompleted;
+                _getBigDataFromServer.RunWorkerAsync();
+            }
+            catch (Exception ex)
+            {
+                ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccessTextBlock.Text += ex; });
+                _progressBarWorker.CancelAsync();
+            }
         }
 
         private void _progressBarWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -83,9 +105,7 @@ namespace UI_For_NetworkProg
         {
             _threads.FirstOrDefault(f => f.Name == "_getTeachersByTeacherName")?.Start();
             _progressBarWorker.CancelAsync();
-
         }
-
         private void _getBigDataFromServer_DoWork(object sender, DoWorkEventArgs e)
         {
             _server.GetAllDataFromServer();
@@ -149,7 +169,16 @@ namespace UI_For_NetworkProg
 
         private void SendFileToSolve(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Файл был отправлен успешно , наверное");
+            try
+            {
+                _server.UploadFileToServer(new FileInfo(DropFileLabel.Content.ToString()), ((Group)GroupListView.SelectedItem).GroupName, ((Teacher)AvaliableTeachersListView.SelectedItem).TeacherName);
+                ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccessTextBlock.Text += "\n Файл был отправлен успешно!"; });
+            }
+            catch (Exception exception)
+            {
+                ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccessTextBlock.Text += exception; });
+            }
+           
         }
 
         private void ResendButton_OnClick(object sender, RoutedEventArgs e)
@@ -162,16 +191,12 @@ namespace UI_For_NetworkProg
             int smtpPort = 587;
             string login = "csharp.sdp.162@gmail.com";
             string password = "sdp123456789";
-
-
-            SmtpClient client =
-                new SmtpClient(smtpHost, smtpPort) { Credentials = new NetworkCredential(login, password) };
+            SmtpClient client = new SmtpClient(smtpHost, smtpPort) { Credentials = new NetworkCredential(login, password) };
             string from = login;
             client.EnableSsl = true;
 
             ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() =>
             {
-
                 string to = _server.GetTeacherByName(TeacherNameTextBox.Text).TeacherMail;
                 string subj = "Восстановка мэйла";
                 string body = $"Ваш Guid = {_server.GetTeacherByName(TeacherNameTextBox.Text).TeacherGuid}";
@@ -186,9 +211,7 @@ namespace UI_For_NetworkProg
                     ErrorOrSuccessTextBlock.Text += ex;
                 }
             });
-
             Thread.Sleep(100);
-
         }
         private void Client_SendCompleted(object sender, AsyncCompletedEventArgs e)
         {
