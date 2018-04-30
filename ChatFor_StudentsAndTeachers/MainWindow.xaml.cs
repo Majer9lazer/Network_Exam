@@ -29,7 +29,7 @@ namespace ChatFor_StudentsAndTeachers
         public MainWindow()
         {
             InitializeComponent();
-           
+
 
             _getGroupsByNameWorker.DoWork += _getGroupsByNameWorker_DoWork;
             _getStudentByGroupNameWorker.DoWork += _getStudentByGroupNameWorker_DoWork;
@@ -74,7 +74,53 @@ namespace ChatFor_StudentsAndTeachers
         {
             MessageTextBlock.Text += "\n" + InputMessageTextBox.Text;
             MessagesScrollViewer.ScrollToEnd();
-            InputMessageTextBox.Text = "";
+            InputMessageTextBox.Text = null;
+        }
+
+        private void OpenChatButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChatGrid.Visibility = Visibility.Visible;
+            MessagesScrollViewer.Visibility = Visibility.Visible;
+        }
+
+        private void StudentRadioButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            TeacherOrStudentListViewGridView.Dispatcher.InvokeAsync(() =>
+            {
+                TeacherOrStudentListViewGridView.Columns.FirstOrDefault().DisplayMemberBinding = new Binding("StudentName");
+                TeacherOrStudentListViewGridView.Columns.FirstOrDefault().Header = "StudentName";
+            });
+            StudentBorder.Dispatcher.InvokeAsync(() =>
+                {
+                    StudentBorder.Background = (Brush) new BrushConverter().ConvertFrom("#D46A00");
+
+                });
+            TeacherBorder.Dispatcher.InvokeAsync(() =>
+            {
+                TeacherBorder.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFCA82");
+
+            });
+
+        }
+
+        private void TeacherRadioButton_OnChecked(object sender, RoutedEventArgs e)
+        {
+            TeacherOrStudentListViewGridView.Dispatcher.InvokeAsync(() =>
+            {
+                TeacherOrStudentListViewGridView.Columns.FirstOrDefault().DisplayMemberBinding =
+                    new Binding("TeacherName");
+                TeacherOrStudentListViewGridView.Columns.FirstOrDefault().Header = "TeacherName";
+            });
+            TeacherBorder.Dispatcher.InvokeAsync(() =>
+            {
+                TeacherBorder.Background = (Brush)new BrushConverter().ConvertFrom("#D46A00");
+
+            });
+            StudentBorder.Dispatcher.InvokeAsync(() =>
+            {
+                StudentBorder.Background = (Brush)new BrushConverter().ConvertFrom("#FFFFCA82");
+
+            });
         }
     }
 }

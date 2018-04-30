@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatFor_StudentsAndTeachers"
         mc:Ignorable="d"
-        Title="MainWindow" Height="464.706" Width="852.505">
+        Title="MainWindow" Height="600" Width="750">
 
     <Grid Margin="1.4">
         <Grid.RowDefinitions>
@@ -13,30 +13,100 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
-
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0">
-            <Label x:Name="GroupNameLabel" Content="Write Name of group here" HorizontalAlignment="Center" Background="#FFE49D15"></Label>
-            <TextBox x:Name="GroupNameTextBox" KeyUp="GroupNameTextBox_OnKeyUp" Background="#FFF0AB27" BorderBrush="White" TextAlignment="Center" HorizontalAlignment="Center" Width="{Binding ElementName=GroupNameLabel,Path=ActualWidth}"></TextBox>
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0.5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <GroupBox  Grid.Row="0"
+                           HorizontalAlignment="Left" Width="180"
+                           Header="Who are you" 
+                           Padding="3"
+                           BorderThickness="2" 
+                           BorderBrush="#FF68ADEA">
+                    <Border BorderThickness="2"
+                            BorderBrush="#FF56AAF2"
+                            CornerRadius="7" 
+                            Padding="5" Background="AntiqueWhite">
+                        <StackPanel >
+                            <Border BorderThickness="1.5" 
+                                    x:Name="TeacherBorder"
+                                    BorderBrush="#FF68ADEA"
+                                    Background="#FFFFCA82"
+                                    CornerRadius="7" Padding="1.5"
+                                    Margin="0,1.5">
+                                <RadioButton Content="Teacher" IsChecked="False"
+                                             GroupName="TeachersAndStudents"
+                                             Foreground="Black"
+                                             Checked="TeacherRadioButton_OnChecked"
+                                             BorderBrush="#FF68ADEA"
+                                             BorderThickness="1.5"
+                                             x:Name="TeacherRadioButton" 
+                                             Background="#FFFFF5B8"></RadioButton>
+                            </Border>
+                            <Border
+                                BorderThickness="1.5"
+                                BorderBrush="#FF68ADEA"
+                                CornerRadius="7"
+                                Padding="1.5"
+                                Background="#FFFFCA82"
+                                x:Name="StudentBorder"
+                                Margin="0,1.5">
+                                <RadioButton Content="Student" 
+                                             IsChecked="False"
+                                             Foreground="Black" 
+                                             GroupName="TeachersAndStudents"
+                                             BorderBrush="#FF68ADEA"
+                                             BorderThickness="1.5"
+                                             x:Name="StudentRadioButton" 
+                                             Checked="StudentRadioButton_OnChecked"
+                                             Background="#FFFFF5B8"></RadioButton>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+                </GroupBox>
+                <Label Grid.Row="1" Grid.Column="0" x:Name="GroupNameLabel" 
+                       Content="Write Name of group here"  
+                       VerticalAlignment="Top"
+                       Background="#FFE49D15" BorderBrush="#FFE49D15"></Label>
+                <TextBox Grid.Row="2" Grid.Column="0"
+                         VerticalAlignment="Bottom"
+                         x:Name="GroupNameTextBox" 
+                         KeyUp="GroupNameTextBox_OnKeyUp"
+                         Background="#FFF0AB27"
+                         BorderBrush="#FFF0AB27" 
+                         TextAlignment="Center" HorizontalAlignment="Center" Width="{Binding ElementName=GroupNameLabel,Path=ActualWidth}"></TextBox>
+                <ListView Grid.Row="0" Grid.Column="1"
+                          x:Name="TeacherOrStudentListView">
+                    <ListView.View>
+                        <GridView x:Name="TeacherOrStudentListViewGridView">
+                            <GridView.Columns>
+                                <GridViewColumn Header="Name"></GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </Grid>
         </StackPanel>
-        <ListView Grid.Row="0" Grid.Column="1" x:Name="GroupInfoListView">
-            <ListView.View>
-                <GridView>
-                    <GridView.Columns>
-                        <GridViewColumn Header="groupName" DisplayMemberBinding="{Binding Path=GroupName}"></GridViewColumn>
-                    </GridView.Columns>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <StackPanel Grid.Row="1" Grid.Column="0">
-            <Label x:Name="StudentNameLabel" Content="Write your name" HorizontalAlignment="Center" Background="#FFE49D15"></Label>
-            <TextBox x:Name="StudenNameTextBox" KeyUp="StudenNameTextBox_OnKeyUp" Background="#FFF0AB27" BorderBrush="White" TextAlignment="Center" HorizontalAlignment="Center" Width="{Binding ElementName=StudentNameLabel,Path=ActualWidth}"></TextBox>
+        <StackPanel Grid.Column="0"   Grid.Row="1">
+            <Label x:Name="StudentNameLabel" Content="Write your name" HorizontalAlignment="Left" Background="#FFE49D15"></Label>
+            <TextBox x:Name="StudenNameTextBox" 
+                     KeyUp="StudenNameTextBox_OnKeyUp" 
+                     Background="#FFF0AB27" BorderBrush="{Binding ElementName=StudenNameTextBox,Path=Background}" 
+                     TextAlignment="Center" HorizontalAlignment="Left" Width="{Binding ElementName=StudentNameLabel,Path=ActualWidth}"></TextBox>
         </StackPanel>
-        <ListView Grid.Row="1" Grid.Column="1" x:Name="StudentsInCurrentGroup" >
+        <ListView Grid.Column="1" x:Name="StudentsInCurrentGroup"  Grid.Row="1" >
             <ListView.View>
                 <GridView>
                     <GridView.Columns>
@@ -45,36 +115,66 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <StackPanel Grid.Column="1" Grid.Row="2">
-            <Button Content="Open the chat" x:Name="OpenChatButton"></Button>
-        </StackPanel>
-        <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Vertical">
+
+        <StackPanel Grid.Column="0" Grid.Row="2" 
+                    Grid.ColumnSpan="2" 
+                    Orientation="Vertical"
+                    Grid.RowSpan="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="80"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="90"></RowDefinition>
+                    <RowDefinition ></RowDefinition>
                 </Grid.RowDefinitions>
-                <ScrollViewer Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" x:Name="MessagesScrollViewer">
-                    <TextBlock   TextWrapping="Wrap" x:Name="MessageTextBlock" Background="AliceBlue"></TextBlock>
+                <StackPanel Grid.Column="1" Grid.Row="0">
+                    <Button Margin="5" Padding="3"
+                            HorizontalAlignment="Right" 
+                            Content="Open the chat"
+                            x:Name="OpenChatButton"
+                            Click="OpenChatButton_Click"></Button>
+                </StackPanel>
+                <ScrollViewer Visibility="Hidden"
+                              Grid.Column="0"
+                              Grid.Row="1"
+                              Grid.ColumnSpan="2" x:Name="MessagesScrollViewer">
+                    <TextBlock  
+                        TextWrapping="Wrap"
+                        x:Name="MessageTextBlock" Background="AliceBlue"></TextBlock>
                 </ScrollViewer>
-                <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Bottom"  >
+                <Grid   x:Name="ChatGrid"   Grid.Column="0" Grid.Row="2" Visibility="Hidden"
+                        Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <Label Foreground="White" Style="{DynamicResource LabelStyle}" Content="YourMessage here" Background="#FF2788D4" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"></Label>
-                    <TextBox Grid.Column="1" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" x:Name="InputMessageTextBox" Margin="5,0,0,0" BorderThickness="0,0,0,2" Width="70" BorderBrush="#FFB4D8F7"></TextBox>
-                    <Button Grid.Column="2" IsDefault="True" Click="SendMessage_OnClick"  x:Name="SendMessage" Content="Send"  Style="{DynamicResource ButtonStyle}" Width="70" Background="#FF4088C8" Foreground="White">
+                    <Label Foreground="White" Style="{DynamicResource LabelStyle}"
+                           Content="YourMessage here" 
+                           Background="#FF2788D4" 
+                           VerticalContentAlignment="Center"  
+                           HorizontalContentAlignment="Center" Margin="5,0"
+                           ></Label>
+                    <TextBox  Grid.Column="1" Width="400"
+                             VerticalContentAlignment="Bottom" x:Name="InputMessageTextBox"
+                              BorderThickness="0,0,2,2"
+                             Style="{DynamicResource MessageTextBoxStyle}"
+                             BorderBrush="#FFB4D8F7"/>
+                    <Button 
+                        Grid.Column="2" IsDefault="True" 
+                        Click="SendMessage_OnClick" HorizontalAlignment="Left" 
+                        x:Name="SendMessage" Content="Send"  Style="{DynamicResource ButtonStyle}"
+                        Width="70" Background="#FF4088C8"
+                        Margin="1.8,0"
+                        Foreground="White">
                     </Button>
                 </Grid>
             </Grid>
         </StackPanel>
-        <TextBlock Grid.Column="0"  Grid.ColumnSpan="2" Grid.Row="3" Margin="5" Background="AliceBlue" x:Name="ErrorOrSuccesTextBlock" TextWrapping="Wrap"></TextBlock>
+        <TextBlock Grid.Column="0"  Grid.ColumnSpan="2" Grid.Row="3" Background="AliceBlue" x:Name="ErrorOrSuccesTextBlock" TextWrapping="Wrap"></TextBlock>
     </Grid>
     <Window.Resources>
         <Style TargetType="{x:Type Button}"  x:Key="ButtonStyle">
@@ -177,9 +277,9 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Label">
-                        <Border Background="{TemplateBinding Background}"
+                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}"
                                 CornerRadius="11">
-                            <ContentPresenter RecognizesAccessKey="True"
+                            <ContentPresenter RecognizesAccessKey="True" 
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               ></ContentPresenter>
@@ -188,5 +288,180 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- defining some colors to use in our template and style section -->
+        <Color x:Key="ControlForeground">#181818</Color>
+        <Color x:Key="ControlReadOnlyForeground">#383838</Color>
+        <Color x:Key="ControlDisabledForeground">#686868</Color>
+
+        <Color x:Key="ControlBackground">#f7f7f9</Color>
+        <Color x:Key="ControlHoveredBackground">#fafafc</Color>
+        <Color x:Key="ControlFocusedBackground">#fdfdff</Color>
+        <Color x:Key="ControlReadOnlyBackground">#f2f2f4</Color>
+        <Color x:Key="ControlDisabledBackground">#efeff2</Color>
+
+        <Color x:Key="ControlBorder">#383838</Color>
+        <Color x:Key="ControlHoveredBorder">#0BBAE0</Color>
+        <Color x:Key="ControlFocusedBorder">#000000</Color>
+        <Color x:Key="ControlReadOnlyBorder">#484848</Color>
+        <Color x:Key="ControlDisabledBorder">#787878</Color>
+
+        <!-- creating a control template for TextBox -->
+        <ControlTemplate x:Key="TextBoxTemplateBase" TargetType="{x:Type TextBox}">
+            <Grid x:Name="root" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}">
+                <!-- managing visual states to change controls styles on different states -->
+                <VisualStateManager.VisualStateGroups>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <Storyboard>
+                                <DoubleAnimation BeginTime="00:00:00.000" Duration="00:00:00.500"
+                                             From="1" To="0"
+                                             Storyboard.TargetProperty="Opacity"
+                                             Storyboard.TargetName="hoverBorder"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="MouseOver">
+                            <Storyboard>
+                                <DoubleAnimation BeginTime="00:00:00.000" Duration="00:00:00.500"
+                                             From="0" To="1"
+                                             Storyboard.TargetProperty="Opacity"
+                                             Storyboard.TargetName="hoverBorder"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Disabled">
+                            <Storyboard>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="normalBorder"
+                                                          Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
+                                    <EasingColorKeyFrame KeyTime="0" Value="{StaticResource ControlDisabledBackground}" />
+                                </ColorAnimationUsingKeyFrames>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="normalBorder"
+                                                          Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
+                                    <EasingColorKeyFrame KeyTime="0" Value="{StaticResource ControlDisabledBorder}" />
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="ReadOnly">
+                            <Storyboard>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="normalBorder"
+                                                          Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
+                                    <EasingColorKeyFrame KeyTime="0" Value="{StaticResource ControlReadOnlyBackground}" />
+                                </ColorAnimationUsingKeyFrames>
+                                <ColorAnimationUsingKeyFrames Storyboard.TargetName="normalBorder"
+                                                          Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
+                                    <EasingColorKeyFrame KeyTime="0" Value="{StaticResource ControlReadOnlyBorder}" />
+                                </ColorAnimationUsingKeyFrames>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                    <VisualStateGroup x:Name="FocusStates">
+                        <VisualState x:Name="Focused">
+                            <Storyboard>
+                                <DoubleAnimation BeginTime="00:00:00.000" Duration="00:00:00.300"
+                                             From="0" To="1"
+                                             Storyboard.TargetProperty="Opacity"
+                                             Storyboard.TargetName="focusBorder"/>
+                            </Storyboard>
+                        </VisualState>
+                        <VisualState x:Name="Unfocused">
+                            <Storyboard>
+                                <DoubleAnimation BeginTime="00:00:00.000" Duration="00:00:00.700"
+                                             From="1" To="0"
+                                             Storyboard.TargetProperty="Opacity"
+                                             Storyboard.TargetName="focusBorder"/>
+                            </Storyboard>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateManager.VisualStateGroups>
+
+                <!-- main border, styling the border-brush and background for Normal state -->
+                <Border x:Name="normalBorder" 
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                       />
+
+                <!-- styling border-brush and background-color for MouseOver state -->
+                <Border x:Name="hoverBorder" Opacity="0" 
+                       
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{StaticResource ControlHoveredBorder}"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="#FF57C7C7"/>
+                    </Border.Background>
+                </Border>
+
+                <!-- styling border-brush and background-color for Focused state -->
+                <Border x:Name="focusBorder" Opacity="0" 
+                        
+                    BorderThickness="{TemplateBinding BorderThickness}">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{StaticResource ControlHoveredBorder}"/>
+                    </Border.BorderBrush>
+                    <Border.Background>
+                        <SolidColorBrush Color="{StaticResource ControlFocusedBackground}"/>
+                    </Border.Background>
+                </Border>
+
+                <!-- TextBox uses a ScrollViewer named PART_ContentHost as its content-presenter -->
+                <ScrollViewer x:Name="PART_ContentHost"
+                          Padding="{TemplateBinding Padding}"
+                          BorderThickness="0" 
+                          IsTabStop="False" 
+                          Margin="2" 
+                          Background="{x:Null}"
+                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Foreground">
+                        <Setter.Value>
+                            <SolidColorBrush Color="{StaticResource ControlDisabledForeground}"/>
+                        </Setter.Value>
+                    </Setter>
+
+                </Trigger>
+                <Trigger Property="IsReadOnly" Value="True">
+                    <Setter Property="Foreground">
+                        <Setter.Value>
+                            <SolidColorBrush Color="{StaticResource ControlReadOnlyForeground}"/>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <!-- every TextBox with property Style="{StaticResource TextBoxBaseStyle}" will use this style -->
+        <Style x:Key="TextBoxBaseStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="{StaticResource ControlBackground}"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Foreground">
+                <Setter.Value>
+                    <SolidColorBrush Color="{StaticResource ControlForeground}"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Padding" Value="8 4"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush">
+                <Setter.Value>
+                    <SolidColorBrush Color="{StaticResource ControlFocusedBackground}"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template" Value="{StaticResource TextBoxTemplateBase}"/>
+        </Style>
+
+        <!-- and if you want to all TextBox `es to use this style, you have to add this line of code: -->
+        <Style x:Key="MessageTextBoxStyle" TargetType="{x:Type TextBox}" BasedOn="{StaticResource TextBoxBaseStyle}" />
     </Window.Resources>
 </Window>
