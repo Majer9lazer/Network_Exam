@@ -44,9 +44,9 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
         }
         */
         #endregion
-        #region GeTeachersByName
+        #region GetTeachersByName
         /*
-        public static List<Teacher> GeTeachersByName(string name)
+        public static List<Teacher> GetTeachersByName(string name)
         {
             if (!string.IsNullOrEmpty(name))
             {

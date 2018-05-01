@@ -44,7 +44,6 @@ C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\Ne
 C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\Microsoft.Diagnostics.Tracing.EventSource.dll
 C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\UI_For_NetworkProg.pdb
 C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\UI_For_NetworkProg.exe.config
-C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\RestSharp.xml
 C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\RabbitMQ.Client.xml
 C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\Newtonsoft.Json.xml
 C:\Users\user\Source\Repos\Network_Exam\ChatFor_StudentsAndTeachers\bin\Debug\Microsoft.Diagnostics.Tracing.EventSource.xml

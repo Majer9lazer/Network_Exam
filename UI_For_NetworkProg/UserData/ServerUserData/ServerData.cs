@@ -33,9 +33,17 @@ namespace UI_For_NetworkProg.UserData.ServerUserData
 
         public List<Teacher> GetTeachersFromServer() => JsonConvert.DeserializeObject<List<Teacher>>(Client.Execute(new RestRequest("GetTeachers", Method.GET)).Content);
 
-        public List<Teacher> GeTeachersByName(string teacherName) => (string.IsNullOrEmpty(teacherName)
+        public List<Teacher> GetTeachersByName(string teacherName) => (string.IsNullOrEmpty(teacherName)
             ? Teachers
             : Teachers.Where(w => w.TeacherName.Contains(teacherName))).ToList();
+
+        public List<Teacher> GetTeacherInGroup(string groupName)=>
+            Teachers.Select(s => new Teacher
+            {
+                TeacherName = s.TeacherName,
+                Groups = s.Groups.Where(w => w.GroupName == groupName).ToList()
+            }).ToList();
+            
         public Teacher GetTeacherByName(string teacherName) => string.IsNullOrEmpty(teacherName)
             ? null
             : Teachers.FirstOrDefault(f => f.TeacherName == teacherName);
@@ -53,8 +61,8 @@ namespace UI_For_NetworkProg.UserData.ServerUserData
         }
         public List<Group> GetGroupsByName(string groupName) =>
              string.IsNullOrEmpty(groupName)
-                ? null
-                : Groups.Where(w => w.GroupName.Contains(groupName)).ToList();
+                ? Groups
+                : Groups.Where(w => w.GroupName.ToLower().Contains(groupName.ToLower())).ToList();
         public void Add_Students(Student st) => Students.Add(st);
         public void Add_Groups(Group g) => Groups.Add(g);
         public void Add_Teachers(Teacher t) => Teachers.Add(t);
@@ -69,15 +77,12 @@ namespace UI_For_NetworkProg.UserData.ServerUserData
             if (string.IsNullOrEmpty(s))
                 try
                 {
-                    string response_;
                     using (WebClient webClient = new WebClient())
                     {
-                        var responce = webClient.UploadFile(
-                            UrlToServer + $"UploadFile/{fileInfo.Extension}/{groupName}/{teacherName}",
-                            fileInfo.FullName);
-                        response_ = Encoding.ASCII.GetString(responce);
+                        byte[] responce = webClient.UploadFile(UrlToServer + $"UploadFile/{fileInfo.Extension}/{groupName}/{teacherName}", fileInfo.FullName);
+                        return Encoding.ASCII.GetString(responce);
                     }
-                    return null;
+
                 }
                 catch (Exception e)
                 {
@@ -93,16 +98,19 @@ namespace UI_For_NetworkProg.UserData.ServerUserData
         public ServerData(bool initializeRabbitMq)
         {
             //Using rabbit mq
-            string Ip = "localhost";
-            string Login = "best";
-            string Password = GetPasswordFromRabbitMq();
-            _connection = new ConnectionFactory
+            if (initializeRabbitMq)
             {
-                HostName = Ip,
-                UserName = Login,
-                Password = Password,
-                VirtualHost = "/"
-            };
+                string Ip = "localhost";
+                string Login = "best";
+                string Password = "liza1999";
+                _connection = new ConnectionFactory
+                {
+                    HostName = Ip,
+                    UserName = Login,
+                    Password = Password,
+                    VirtualHost = "/"
+                };
+            }
 
         }
         public string GetPasswordFromRabbitMq()

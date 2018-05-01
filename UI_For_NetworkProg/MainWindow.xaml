@@ -81,11 +81,12 @@
                                 <Button  Content="Resend me Guid on my mail"  VerticalAlignment="Top" HorizontalAlignment="Center" x:Name="ResendButton" Margin="3,5,0,0" Click="ResendButton_OnClick"></Button>
                                 <Button Content="Send File to students"  VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,3,0,0"  Click="SendFileToSolve"></Button>
                             </StackPanel>
-                            <ListView Grid.Row="5" Grid.Column="1" x:Name="StudentsListView">
+                            <ListView Grid.Row="5" Grid.Column="1" x:Name="StudentsListView" GridViewColumnHeader.Click="StudentsListView_OnClick" >
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
-                                            <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=StudentName}"></GridViewColumn>
+                                            <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=StudentName}">
+                                            </GridViewColumn>
                                         </GridView.Columns>
                                     </GridView>
                                 </ListView.View>

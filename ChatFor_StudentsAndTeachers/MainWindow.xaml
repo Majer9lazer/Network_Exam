@@ -5,33 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ChatFor_StudentsAndTeachers"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="750">
+        Title="MainWindow" Height="720" Width="750">
 
     <Grid Margin="1.4">
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="200" ></RowDefinition>
+            <RowDefinition Height="55"></RowDefinition>
+            <RowDefinition  ></RowDefinition>
+
+            <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,0,0.5">
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition ></RowDefinition>
+                    <RowDefinition Height="120" ></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <GroupBox  Grid.Row="0"
+                <GroupBox  Grid.Row="2"
                            HorizontalAlignment="Left" Width="180"
                            Header="Who are you" 
+                          VerticalAlignment="Center"
                            Padding="3"
                            BorderThickness="2" 
                            BorderBrush="#FF68ADEA">
@@ -76,18 +78,40 @@
                         </StackPanel>
                     </Border>
                 </GroupBox>
-                <Label Grid.Row="1" Grid.Column="0" x:Name="GroupNameLabel" 
-                       Content="Write Name of group here"  
-                       VerticalAlignment="Top"
-                       Background="#FFE49D15" BorderBrush="#FFE49D15"></Label>
-                <TextBox Grid.Row="2" Grid.Column="0"
-                         VerticalAlignment="Bottom"
+                <Label Grid.Row="0" Grid.Column="0" x:Name="GroupNameLabel" 
+                       Content="Write Name of group here" 
+                       HorizontalContentAlignment="Center"
+                       VerticalContentAlignment="Center"
+                       Foreground="White"
+                       FontSize="15"
+                       VerticalAlignment="Stretch"
+                       Background="#FFE49D15" 
+                       BorderBrush="#FFE49D15"></Label>
+                <TextBox Grid.Row="1" Grid.Column="0"
+                         VerticalAlignment="Stretch"
+                         VerticalContentAlignment="Center"
                          x:Name="GroupNameTextBox" 
                          KeyUp="GroupNameTextBox_OnKeyUp"
                          Background="#FFF0AB27"
-                         BorderBrush="#FFF0AB27" 
-                         TextAlignment="Center" HorizontalAlignment="Center" Width="{Binding ElementName=GroupNameLabel,Path=ActualWidth}"></TextBox>
-                <ListView Grid.Row="0" Grid.Column="1"
+                         BorderBrush="#FFE49D15" 
+                         TextAlignment="Center" 
+                         Width="{Binding ElementName=GroupNameLabel,Path=ActualWidth}"></TextBox>
+                <ListView Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" x:Name="GroupListView" 
+                          Height="90"
+                          VerticalAlignment="Top">
+                    <ListView.View>
+                        <GridView>
+                            <GridView.Columns>
+                                <GridViewColumn Header="GroupName" 
+                                                DisplayMemberBinding="{Binding Path=GroupName}"
+                                                ></GridViewColumn>
+                            </GridView.Columns>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <ListView Grid.Row="2" Grid.Column="1" Height="100" 
+                          Margin="0,2"
+                          VerticalAlignment="Stretch"
                           x:Name="TeacherOrStudentListView">
                     <ListView.View>
                         <GridView x:Name="TeacherOrStudentListViewGridView">
@@ -99,36 +123,17 @@
                 </ListView>
             </Grid>
         </StackPanel>
-        <StackPanel Grid.Column="0"   Grid.Row="1">
-            <Label x:Name="StudentNameLabel" Content="Write your name" HorizontalAlignment="Left" Background="#FFE49D15"></Label>
-            <TextBox x:Name="StudenNameTextBox" 
-                     KeyUp="StudenNameTextBox_OnKeyUp" 
-                     Background="#FFF0AB27" BorderBrush="{Binding ElementName=StudenNameTextBox,Path=Background}" 
-                     TextAlignment="Center" HorizontalAlignment="Left" Width="{Binding ElementName=StudentNameLabel,Path=ActualWidth}"></TextBox>
-        </StackPanel>
-        <ListView Grid.Column="1" x:Name="StudentsInCurrentGroup"  Grid.Row="1" >
-            <ListView.View>
-                <GridView>
-                    <GridView.Columns>
-                        <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=StudentName}"></GridViewColumn>
-                    </GridView.Columns>
-                </GridView>
-            </ListView.View>
-        </ListView>
-
         <StackPanel Grid.Column="0" Grid.Row="2" 
-                    Grid.ColumnSpan="2" 
-                    Orientation="Vertical"
-                    Grid.RowSpan="2">
-            <Grid>
+                    Grid.ColumnSpan="2" VerticalAlignment="Top" Height="370" Grid.RowSpan="2">
+            <Grid VerticalAlignment="Bottom" Height="370">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition Height="90"></RowDefinition>
-                    <RowDefinition ></RowDefinition>
+                    <RowDefinition/>
+                    <RowDefinition Height="260"></RowDefinition>
+                    <RowDefinition  ></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Column="1" Grid.Row="0">
                     <Button Margin="5" Padding="3"
@@ -137,16 +142,22 @@
                             x:Name="OpenChatButton"
                             Click="OpenChatButton_Click"></Button>
                 </StackPanel>
-                <ScrollViewer Visibility="Hidden"
+                <ScrollViewer Visibility="Visible"
                               Grid.Column="0"
                               Grid.Row="1"
+                              
                               Grid.ColumnSpan="2" x:Name="MessagesScrollViewer">
                     <TextBlock  
                         TextWrapping="Wrap"
                         x:Name="MessageTextBlock" Background="AliceBlue"></TextBlock>
                 </ScrollViewer>
-                <Grid   x:Name="ChatGrid"   Grid.Column="0" Grid.Row="2" Visibility="Hidden"
-                        Grid.ColumnSpan="2" VerticalAlignment="Bottom" HorizontalAlignment="Center">
+                <Grid x:Name="ChatGrid"
+                      Grid.Column="0" 
+                      Grid.Row="2"
+                      Visibility="Visible"
+                      Grid.ColumnSpan="2"
+                      VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                       Width="450">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
@@ -158,9 +169,9 @@
                            VerticalContentAlignment="Center"  
                            HorizontalContentAlignment="Center" Margin="5,0"
                            ></Label>
-                    <TextBox  Grid.Column="1" Width="400"
+                    <TextBox  Grid.Column="1"
                              VerticalContentAlignment="Bottom" x:Name="InputMessageTextBox"
-                              BorderThickness="0,0,2,2"
+                              BorderThickness="0,0,0,2"
                              Style="{DynamicResource MessageTextBoxStyle}"
                              BorderBrush="#FFB4D8F7"/>
                     <Button 
@@ -174,7 +185,16 @@
                 </Grid>
             </Grid>
         </StackPanel>
-        <TextBlock Grid.Column="0"  Grid.ColumnSpan="2" Grid.Row="3" Background="AliceBlue" x:Name="ErrorOrSuccesTextBlock" TextWrapping="Wrap"></TextBlock>
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,3">
+            <RadioButton Padding="3" VerticalContentAlignment="Center" x:Name="UseRabbitMqRadioButton" GroupName="WhatToUseGroupName" Content="Rabbit Mq" IsChecked="False"></RadioButton>
+            <RadioButton Padding="3" VerticalContentAlignment="Center" x:Name="UseUdpRadioButton" GroupName="WhatToUseGroupName" Content="UDP" IsChecked="False"></RadioButton>
+        </StackPanel>
+
+        <ScrollViewer Grid.Column="0"  Grid.ColumnSpan="2" CanContentScroll="True"
+                      Grid.Row="3" Margin="0,0.5,0,-0.5">
+            <TextBlock  Background="AliceBlue" x:Name="ErrorOrSuccesTextBlock" 
+                   TextWrapping="Wrap" ></TextBlock>
+        </ScrollViewer>
     </Grid>
     <Window.Resources>
         <Style TargetType="{x:Type Button}"  x:Key="ButtonStyle">

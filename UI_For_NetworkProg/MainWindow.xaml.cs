@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -31,25 +32,9 @@ namespace UI_For_NetworkProg
         private readonly BackgroundWorker _checkForConnectionToServerWorker = new BackgroundWorker();
         private readonly Random _rnd = new Random();
         private ServerData _server;
-        private List<Thread> _threads;
+
         public MainWindow()
         {
-            _threads = new List<Thread>()
-            {
-                new Thread(()=>{_progressBarWorker.RunWorkerAsync();})
-                {
-                    Name = "_progressBarThread",Priority= (ThreadPriority)_rnd.Next(0,5)
-                },
-                new Thread(()=>{_sendMailAsync.RunWorkerAsync();})
-                {
-                    Name = "_senMailThread",Priority= (ThreadPriority)_rnd.Next(0,5)
-                },
-                new Thread(()=>{_getTeachersByTeacherName.RunWorkerAsync();})
-                {
-                    Name = "_getTeachersByTeacherName",Priority= (ThreadPriority)_rnd.Next(0,5)
-                }
-
-            };
 
             InitializeComponent();
 
@@ -62,7 +47,7 @@ namespace UI_For_NetworkProg
             _progressBarWorker.DoWork += _progressBarWorker_DoWork;
             _progressBarWorker.WorkerSupportsCancellation = true;
             _progressBarWorker.RunWorkerCompleted += _progressBarWorker_RunWorkerCompleted;
-            _threads.FirstOrDefault(f => f.Name == "_progressBarThread")?.Start();
+            _progressBarWorker.RunWorkerAsync();
 
             //Initialize sendmail worker
             _sendMailAsync.DoWork += _sendMailAsync_DoWork;
@@ -103,8 +88,8 @@ namespace UI_For_NetworkProg
 
         private void _getBigDataFromServer_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            _threads.FirstOrDefault(f => f.Name == "_getTeachersByTeacherName")?.Start();
-            _progressBarWorker.CancelAsync();
+            _getTeachersByTeacherName.RunWorkerAsync();
+            //_progressBarWorker.CancelAsync();
         }
         private void _getBigDataFromServer_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -114,10 +99,19 @@ namespace UI_For_NetworkProg
         {
 
             AvaliableTeachersListView.Dispatcher.InvokeAsync(() =>
+            {
+                try
                 {
-                    AvaliableTeachersListView.ItemsSource = _server.GeTeachersByName(TeacherNameTextBox.Text);
-                });
+                    AvaliableTeachersListView.ItemsSource = _server.GetTeachersByName(TeacherNameTextBox.Text);
+                }
+                catch (Exception ex)
+                {
+                    ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccessTextBlock.Text += ex; });
+                }
+
+            });
             Thread.Sleep(20);
+            _progressBarWorker.CancelAsync();
 
         }
 
@@ -171,19 +165,34 @@ namespace UI_For_NetworkProg
         {
             try
             {
-                _server.UploadFileToServer(new FileInfo(DropFileLabel.Content.ToString()), ((Group)GroupListView.SelectedItem).GroupName, ((Teacher)AvaliableTeachersListView.SelectedItem).TeacherName);
-                ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccessTextBlock.Text += "\n Файл был отправлен успешно!"; });
+                if (TeacherGuidTextBox.Text == ((Teacher)AvaliableTeachersListView.SelectedItem).TeacherGuid)
+                {
+                    _server.UploadFileToServer(new FileInfo(DropFileLabel.Content.ToString()),
+                        ((Group)GroupListView.SelectedItem).GroupName,
+                        ((Teacher)AvaliableTeachersListView.SelectedItem).TeacherName);
+                    ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() =>
+                    {
+                        ErrorOrSuccessTextBlock.Text += "\nФайл был отправлен успешно!";
+                    });
+                }
+                else
+                {
+                    ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() =>
+                    {
+                        ErrorOrSuccessTextBlock.Text += "\nВаш идентификационный номер не совпадает";
+                    });
+                }
             }
             catch (Exception exception)
             {
                 ErrorOrSuccessTextBlock.Dispatcher.InvokeAsync(() => { ErrorOrSuccessTextBlock.Text += exception; });
             }
-           
+
         }
 
         private void ResendButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _threads.FirstOrDefault(f => f.Name == "_senMailThread")?.Start();
+            _sendMailAsync.RunWorkerAsync();
         }
         private void _sendMailAsync_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -251,6 +260,14 @@ namespace UI_For_NetworkProg
         private void GroupListView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             StudentsListView.ItemsSource = ((Group)GroupListView.SelectedItem).Students.OrderBy(o => o.StudentName);
+        }
+
+        private void StudentsListView_OnClick(object sender, RoutedEventArgs e)
+        {
+            StudentsListView.ItemsSource = StudentsListView.ItemsSource ==
+                                           ((Group)GroupListView.SelectedItem).Students.OrderBy(o => o.StudentName) ?
+                ((Group)GroupListView.SelectedItem).Students.OrderByDescending(o => o.StudentName) : 
+                ((Group)GroupListView.SelectedItem).Students.OrderBy(o => o.StudentName);
         }
     }
 }
