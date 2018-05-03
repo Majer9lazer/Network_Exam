@@ -16,7 +16,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition></RowDefinition>
-                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="60"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Margin="2">
                         <Grid>
@@ -36,7 +36,7 @@
                                 <Label Content="Write your name here" Background="#FF9DD0FD" VerticalContentAlignment="Center" VerticalAlignment="Top"></Label>
                                 <TextBox x:Name="TeacherNameTextBox" BorderBrush="Black" Margin="0,1,0,0" VerticalContentAlignment="Center" VerticalAlignment="Top" KeyUp="TeacherNameTextBox_OnKeyUp"></TextBox>
                             </StackPanel>
-                            <ListView Grid.Row="0" Grid.Column="1" x:Name="AvaliableTeachersListView" Grid.RowSpan="2" BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,0,0,0">
+                            <ListView Grid.Row="0" Grid.Column="1" x:Name="AvaliableTeachersListView" Grid.RowSpan="2" BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,0,0,0" SelectionChanged="AvaliableTeachersListView_OnSelectionChanged">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
@@ -52,13 +52,13 @@
                             </StackPanel>
                             <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,5,0,0">
                                 <Label Content="Write here name of group to give task" VerticalContentAlignment="Center" VerticalAlignment="Top" Background="#FF9DD0FD"></Label>
-                                <TextBox x:Name="TeacherGroupNameTextBox" BorderBrush="Black" Margin="0,1,0,0" Text="{Binding ElementName=GroupListView,Path=SelectedItem}" VerticalContentAlignment="Center" VerticalAlignment="Top"></TextBox>
+                                <TextBox x:Name="TeacherGroupNameTextBox" BorderBrush="Black" Margin="0,1,0,0" Text="{Binding ElementName=GroupListView,Path=SelectedItem.GroupName}" VerticalContentAlignment="Center" VerticalAlignment="Top"></TextBox>
                             </StackPanel>
-                            <ListView Grid.Row="2" Height="90" Grid.Column="1" x:Name="GroupListView"  BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,5,0,0">
+                            <ListView Grid.Row="2" Height="90" Grid.Column="1" x:Name="GroupListView"  BorderBrush="#FF449BE9" BorderThickness="1.5" Margin="3,5,0,0" SelectionChanged="GroupListView_OnSelectionChanged">
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
-                                            <GridViewColumn Header="GroupName"></GridViewColumn>
+                                            <GridViewColumn Header="GroupName" DisplayMemberBinding="{Binding Path=GroupName}"></GridViewColumn>
                                         </GridView.Columns>
                                     </GridView>
                                 </ListView.View>
@@ -78,21 +78,22 @@
                                 <TextBox x:Name="ThemeNameTextBox" Margin="0,3,0,0" BorderBrush="Black" KeyUp="ThemeNameTextBox_OnKeyUp"></TextBox>
                             </StackPanel>
                             <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical">
-                                <Button  Content="Resend me Guid on my mail"  VerticalAlignment="Top" x:Name="ResendButton" Margin="3,5,0,0" Click="ResendButton_OnClick"></Button>
-                                <Button Content="Send File to students"  VerticalAlignment="Bottom" Margin="3,8,0,0"  Click="SendFileToSolve"></Button>
+                                <Button  Content="Resend me Guid on my mail"  VerticalAlignment="Top" HorizontalAlignment="Center" x:Name="ResendButton" Margin="3,5,0,0" Click="ResendButton_OnClick"></Button>
+                                <Button Content="Send File to students"  VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,3,0,0"  Click="SendFileToSolve"></Button>
                             </StackPanel>
-                            <ListView Grid.Row="5" Grid.Column="1" x:Name="StudentsListView">
+                            <ListView Grid.Row="5" Grid.Column="1" x:Name="StudentsListView" GridViewColumnHeader.Click="StudentsListView_OnClick" >
                                 <ListView.View>
                                     <GridView>
                                         <GridView.Columns>
-                                            <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=student.StudentName}"></GridViewColumn>
+                                            <GridViewColumn Header="StudentName" DisplayMemberBinding="{Binding Path=StudentName}">
+                                            </GridViewColumn>
                                         </GridView.Columns>
                                     </GridView>
                                 </ListView.View>
                             </ListView>
                         </Grid>
                     </StackPanel>
-                    <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Visible" Height="40">
+                    <ScrollViewer Grid.Row="1" CanContentScroll="True" VerticalScrollBarVisibility="Visible" >
                         <TextBlock x:Name="ErrorOrSuccessTextBlock"  Background="#FFB4DCFF" Text="Here Will be Errors or usefull information" Padding="5" TextWrapping="Wrap"></TextBlock>
                     </ScrollViewer>
                 </Grid>

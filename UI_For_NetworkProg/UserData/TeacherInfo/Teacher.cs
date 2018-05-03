@@ -13,16 +13,18 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
     [Serializable]
     public class Teacher
     {
-        private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent?.Parent;
-        private static readonly FileInfo F1 = new FileInfo(PathToDataBase.FullName + @"/UserData/TeacherInfo/Teachers_Db.xml");
-        public static readonly XDocument TeacherDb = XDocument.Load(F1.FullName);
-
+        #region Properties
+        //private static readonly DirectoryInfo PathToDataBase = new DirectoryInfo((AppDomain.CurrentDomain.BaseDirectory)).Parent?.Parent?.Parent;
+        //private static readonly FileInfo F1 = new FileInfo(PathToDataBase.FullName + @"/UserData/TeacherInfo/Teachers_Db.xml");
+        //public static readonly XDocument TeacherDb = XDocument.Load(F1.FullName);
+        #endregion
         public string TeacherName { get; set; }
         public string TeacherLastName { get; set; }
         public string TeacherGuid { get; set; }
         public string TeacherMail { get; set; }
         public List<Group> Groups { get; set; }
-
+        #region GetTeacherByName
+        /*
         public static Teacher GetTeacherByName(string teacherName)
         {
             Teacher teacherToReturn = new Teacher();
@@ -38,16 +40,19 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
                     case "TeacherMail": { teacherToReturn.TeacherMail = e.Value; break; }
                 }
             }
-
             return teacherToReturn;
         }
-        public static List<Teacher> GeTeachersByName(string name)
+        */
+        #endregion
+        #region GetTeachersByName
+        /*
+        public static List<Teacher> GetTeachersByName(string name)
         {
             if (!string.IsNullOrEmpty(name))
             {
                 var teachers = TeacherDb.Root?.Elements().Elements()
                     .Where(w => w.Name == nameof(TeacherName) && w.Value.Contains(name));
-                
+
                 List<Teacher> teachersList = new List<Teacher>();
                 foreach (XElement elem in teachers)
                 {
@@ -57,15 +62,15 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
                         switch (xelem.Name.LocalName)
                         {
                             case "TeacherName":
-                            {
-                                t.TeacherName = xelem.Value;
-                                break;
-                            }
+                                {
+                                    t.TeacherName = xelem.Value;
+                                    break;
+                                }
                             case "TeacherLastName":
-                            {
-                                t.TeacherLastName = xelem.Value;
-                                break;
-                            }
+                                {
+                                    t.TeacherLastName = xelem.Value;
+                                    break;
+                                }
                         }
                     }
                     teachersList.Add(t);
@@ -84,15 +89,15 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
                         switch (el.Name.LocalName)
                         {
                             case "TeacherName":
-                            {
-                                t.TeacherName = el.Value;
-                                break;
-                            }
+                                {
+                                    t.TeacherName = el.Value;
+                                    break;
+                                }
                             case "TeacherLastName":
-                            {
-                                t.TeacherLastName = el.Value;
-                                break;
-                            }
+                                {
+                                    t.TeacherLastName = el.Value;
+                                    break;
+                                }
                         }
                     }
                     teachersList.Add(t);
@@ -100,5 +105,7 @@ namespace UI_For_NetworkProg.UserData.TeacherInfo
                 return teachersList;
             }
         }
+        */
+        #endregion
     }
 }
